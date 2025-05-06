@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cubitimagepicker/cubit/image_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,29 +52,44 @@ class _MyHomePageState extends State<MyHomePage> {
           return Center(
               child: Column(
             children: [
-              Image.file(
-                File(state.imagePath),
+              Image.memory(
+                state.imageBytes,
                 height: 200,
               ),
+              // Image.file(
+              //   File(state.imagePath),
+              //   height: 200,
+              // ),
               const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
                   onPressed: (() {
+                    context.read<ImageCubit>().reset();
                     BlocProvider.of<ImageCubit>(context).pickImage();
                   }),
                   child: const Text('Pick Another Image'))
             ],
           ));
         } else if (state is ImageErrorState) {}
-        return Container();
+        return Center(
+            child: Column(
+          children: [
+            const Text("Image error"),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: (() {
+                  context.read<ImageCubit>().reset();
+                  BlocProvider.of<ImageCubit>(context).pickImage();
+                }),
+                child: const Text('Try again'))
+          ],
+        ));
       })),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: (() {}),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
